@@ -210,6 +210,15 @@
             background-color: rgba(255, 255, 0, 0.1);
         }
         
+        .confirmed-cell {
+            background-color: rgba(128, 128, 128, 0.2);
+            cursor: not-allowed;
+        }
+        
+        .confirmed-cell:hover {
+            background-color: rgba(128, 128, 128, 0.2);
+        }
+        
         .player-name {
             color: white;
             font-weight: bold;
@@ -726,6 +735,7 @@
             </div>
             <div class="io-controls">
                 <button id="download-btn" class="io-button">結果をダウンロード</button>
+                <button id="download-confirmed-btn" class="io-button">確定データをダウンロード</button>
                 <button id="upload-btn" class="io-button">結果をアップロード</button>
                 <input type="file" id="upload-input" accept=".json" style="display: none;">
             </div>
@@ -1384,7 +1394,26 @@
     <script>
         // グローバルなmatchResultsオブジェクト
         let matchResults = {};
+        let confirmedResults = {}; // 確定済み結果
         const blocks = ['red-a', 'red-b', 'blue-a', 'blue-b'];
+        
+        // result.jsonの読み込み
+        async function loadConfirmedResults() {
+            try {
+                const response = await fetch('result.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    confirmedResults = data.confirmed || {};
+                    console.log('確定データを読み込みました:', Object.keys(confirmedResults).length + '件');
+                    // 確定データをmatchResultsにマージ
+                    Object.assign(matchResults, confirmedResults);
+                } else {
+                    console.log('result.jsonが見つかりません。確定データなしで開始します。');
+                }
+            } catch (error) {
+                console.log('result.jsonの読み込みに失敗しました:', error.message);
+            }
+        }
         
         function showAllContent() {
             document.querySelectorAll('.content').forEach(content => content.classList.remove('hidden'));
@@ -1418,6 +1447,12 @@
             const matchKey = `${block}-${player1}-${player2}`;
             const reverseKey = `${block}-${player2}-${player1}`;
             
+            // 確定済み結果は変更不可
+            if (confirmedResults[matchKey]) {
+                console.log('確定済みの結果は変更できません:', matchKey);
+                return;
+            }
+            
             let currentResult = matchResults[matchKey] || 'none';
             
             switch (currentResult) {
@@ -1440,6 +1475,22 @@
             resultDiv.innerHTML = getResultIcon(result);
             resultDiv.className = 'match-result ';
             if(result) resultDiv.classList.add(result);
+            
+            // 確定済み結果の場合はセルのスタイルを変更
+            const player1 = cell.dataset.player1;
+            const player2 = cell.dataset.player2;
+            const block = cell.dataset.block;
+            const matchKey = `${block}-${player1}-${player2}`;
+            
+            if (confirmedResults[matchKey]) {
+                cell.classList.add('confirmed-cell');
+                cell.classList.remove('clickable-cell');
+            } else {
+                cell.classList.remove('confirmed-cell');
+                if (!cell.classList.contains('clickable-cell')) {
+                    cell.classList.add('clickable-cell');
+                }
+            }
         }
 
         function getResultIcon(result) {
@@ -1474,7 +1525,7 @@
             const matches = [];
 
             document.querySelectorAll(`[data-player1="${playerName}"]`).forEach(cell => {
-                if (!cell.classList.contains('clickable-cell')) return;
+                if (!cell.classList.contains('clickable-cell') && !cell.classList.contains('confirmed-cell')) return;
 
                 const opponent = cell.dataset.player2;
                 const dateEl = cell.querySelector('.date');
@@ -1531,7 +1582,9 @@
             });
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 確定データを読み込み
+            await loadConfirmedResults();
             blocks.forEach(blockId => {
                 const table = document.querySelector(`#${blockId} .schedule-table`);
                 if (!table) return;
@@ -1599,6 +1652,7 @@
 
             // Download/Upload functionality
             const downloadBtn = document.getElementById('download-btn');
+            const downloadConfirmedBtn = document.getElementById('download-confirmed-btn');
             const uploadBtn = document.getElementById('upload-btn');
             const uploadInput = document.getElementById('upload-input');
 
@@ -1615,6 +1669,27 @@
                 URL.revokeObjectURL(url);
             });
 
+            // 確定データダウンロード機能
+            downloadConfirmedBtn.addEventListener('click', () => {
+                const confirmedData = {
+                    confirmed: matchResults, // 現在の結果を確定データとして保存
+                    version: "1.0",
+                    lastUpdate: new Date().toISOString(),
+                    totalMatches: Object.keys(matchResults).length
+                };
+                const dataStr = JSON.stringify(confirmedData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'result.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log('確定データをダウンロードしました:', Object.keys(matchResults).length + '件');
+            });
+
             uploadBtn.addEventListener('click', () => uploadInput.click());
 
             uploadInput.addEventListener('change', (event) => {
@@ -1627,9 +1702,17 @@
                         const loadedResults = JSON.parse(e.target.result);
                         // Basic validation
                         if (typeof loadedResults === 'object' && loadedResults !== null) {
-                            matchResults = loadedResults;
+                            // 確定データと予想データをマージ（確定データ優先）
+                            const mergedResults = { ...loadedResults, ...confirmedResults };
+                            matchResults = mergedResults;
+                            
+                            const confirmedCount = Object.keys(confirmedResults).length;
+                            const uploadedCount = Object.keys(loadedResults).length;
+                            const totalCount = Object.keys(mergedResults).length;
+                            
                             refreshAllTables();
-                            alert('結果を正常に読み込みました。');
+                            alert(`結果を正常に読み込みました。\n確定済み: ${confirmedCount}件\nアップロード: ${uploadedCount}件\n合計: ${totalCount}件`);
+                            console.log('マージ完了 - 確定:', confirmedCount, 'アップロード:', uploadedCount, '合計:', totalCount);
                         } else {
                             alert('無効なファイル形式です。');
                         }
@@ -1641,6 +1724,9 @@
                 reader.readAsText(file);
                 uploadInput.value = ''; // Reset input
             });
+            
+            // 確定データ読み込み後にテーブルを更新
+            refreshAllTables();
         });
     </script>
 </body>
