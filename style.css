@@ -262,6 +262,18 @@
             font-weight: bold;
             color: #856404;
         }
+
+        .block-status {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #dc3545;
+        }
+
+        .block-status.confirmed {
+            color: #28a745;
+        }
         
         @media (max-width: 768px) {
             .container {
