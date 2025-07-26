@@ -711,8 +711,8 @@
                     <text id="semi-final-red-text" x="835" y="210" text-anchor="middle" fill="white" font-size="10">準決勝</text>
 
                     <!-- Final Match -->
-                    <line x1="600" y1="205" x2="700" y2="205" stroke="url(#goldGradient)" stroke-width="4"/>
-                    <line x1="800" y1="205" x2="700" y2="205" stroke="url(#goldGradient)" stroke-width="4"/>
+                    <line x1="600" y1="205" x2="650" y2="205" stroke="url(#goldGradient)" stroke-width="4"/>
+                    <line x1="800" y1="205" x2="750" y2="205" stroke="url(#goldGradient)" stroke-width="4"/>
                     <rect x="650" y="190" width="100" height="30" fill="url(#goldGradient)" stroke="#ff6f00" stroke-width="4" rx="10"/>
                     <text x="700" y="210" text-anchor="middle" fill="#1a1a2e" font-size="12" font-weight="bold">FINAL</text>
                 </svg>
@@ -958,6 +958,11 @@
                 return 0;
             });
 
+            // 順位を付与
+            playerStats.forEach((stat, index) => {
+                stat.rank = index + 1;
+            });
+
             return playerStats;
         }
 
@@ -978,8 +983,9 @@
                 if (nameElement && rankElement) {
                     const player = rankings.find(p => p.rank === rank);
                     if (player) {
-                        nameElement.textContent = player.name;
-                        rankElement.textContent = `${rank}位`;
+                        // ブロック名と選手名を両方表示
+                        nameElement.textContent = `${blockShort.toUpperCase()} STARS ${blockSub.toUpperCase()}`;
+                        rankElement.textContent = `${rank}位 ${player.name}`;
                     } else {
                         nameElement.textContent = `${blockShort.toUpperCase()} STARS ${blockSub.toUpperCase()}`;
                         rankElement.textContent = `${rank}位`;
