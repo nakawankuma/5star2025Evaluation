@@ -1065,6 +1065,25 @@
             modal.style.display = 'flex';
         }
 
+        // トーナメント勝者の実際の選手名を取得
+        function getActualTournamentWinner(winnerId) {
+            // winnerIdから対応する試合IDを取得
+            const matchId = winnerId.replace('-winner', '');
+            const matchKey = `tournament-${matchId}`;
+            const result = matchResults[matchKey];
+            
+            if (!result) return null;
+            
+            // 試合結果から勝者を特定
+            if (result === 'win') {
+                return getTournamentPlayer1(matchId);
+            } else if (result === 'lose') {
+                return getTournamentPlayer2(matchId);
+            }
+            
+            return null;
+        }
+
         function showVenueSchedule(venueName, date) {
             const modal = document.getElementById('venue-modal');
             const modalVenueName = document.getElementById('modal-venue-name');
@@ -1152,12 +1171,14 @@
                                 p1_display = `${nameElement.textContent} ${rankElement.textContent}`;
                             }
                         } else {
-                            // 予選勝者の場合
+                            // 予選勝者や準々決勝勝者などの場合
                             if (slot.p1_id.includes('winner')) {
-                                if (tournamentWinners[slot.p1_id]) {
-                                    p1_display = tournamentWinners[slot.p1_id];
+                                // 実際の勝者名を取得
+                                const actualWinner = getActualTournamentWinner(slot.p1_id);
+                                if (actualWinner) {
+                                    p1_display = actualWinner;
                                 } else {
-                                    // 予選勝者の表示を詳細化
+                                    // 勝者が未定の場合の表示
                                     if (slot.p1_id === 'blue-prelim1-winner') p1_display = 'Blue Stars A 3位 vs Blue Stars B 2位の勝者';
                                     else if (slot.p1_id === 'blue-prelim2-winner') p1_display = 'Blue Stars A 2位 vs Blue Stars B 3位の勝者';
                                     else if (slot.p1_id === 'red-prelim1-winner') p1_display = 'Red Stars A 3位 vs Red Stars B 2位の勝者';
@@ -1189,12 +1210,14 @@
                                 p2_display = `${nameElement.textContent} ${rankElement.textContent}`;
                             }
                         } else {
-                            // 予選勝者の場合
+                            // 予選勝者や準々決勝勝者などの場合
                             if (slot.p2_id.includes('winner')) {
-                                if (tournamentWinners[slot.p2_id]) {
-                                    p2_display = tournamentWinners[slot.p2_id];
+                                // 実際の勝者名を取得
+                                const actualWinner = getActualTournamentWinner(slot.p2_id);
+                                if (actualWinner) {
+                                    p2_display = actualWinner;
                                 } else {
-                                    // 予選勝者の表示を詳細化
+                                    // 勝者が未定の場合の表示
                                     if (slot.p2_id === 'blue-prelim1-winner') p2_display = 'Blue Stars A 3位 vs Blue Stars B 2位の勝者';
                                     else if (slot.p2_id === 'blue-prelim2-winner') p2_display = 'Blue Stars A 2位 vs Blue Stars B 3位の勝者';
                                     else if (slot.p2_id === 'red-prelim1-winner') p2_display = 'Red Stars A 3位 vs Red Stars B 2位の勝者';
