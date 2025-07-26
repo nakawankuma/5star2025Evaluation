@@ -176,7 +176,7 @@
                         <th class="red-header">稲葉ともか</th>
                         <th class="red-header">梨杏</th>
                         <th class="red-header">刀羅ナツコ</th>
-                        <th class="red-header">更南</th>
+                        <th class="red-header">吏南</th>
                         <th class="red-header rest-column">休み</th>
                         <th class="red-header point-column">勝点</th>
                     </tr>
@@ -274,7 +274,7 @@
                         <td class="point-column"></td>
                     </tr>
                     <tr>
-                        <td class="player-name red-player">更南</td>
+                        <td class="player-name red-player">吏南</td>
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
@@ -728,7 +728,33 @@
                     <text id="final-result" x="700" y="213" text-anchor="middle" fill="#1a1a2e" font-size="10"></text>
                 </svg>
             </div>
+            
+            <!-- 優勝者表示エリア -->
+            <div id="champion-display" style="display: none; text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(45deg, #ffd700, #ffb300); border-radius: 15px; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);">
+                <div id="champion-text" style="font-size: 3em; font-weight: bold; color: #1a1a2e; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); animation: championGlow 2s ease-in-out infinite alternate;"></div>
+            </div>
         </div>
+        
+        <!-- 優勝者アニメーション用CSS -->
+        <style>
+            @keyframes championGlow {
+                from { 
+                    transform: scale(1); 
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                }
+                to { 
+                    transform: scale(1.05); 
+                    text-shadow: 3px 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.6);
+                }
+            }
+            
+            @media (max-width: 768px) {
+                #champion-text {
+                    font-size: 2em !important;
+                }
+            }
+        </style>
+        
         <div class="venue-list-section" style="margin-top: 40px; padding: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 10px;">
             <h3 style="text-align: center; font-size: 1.8em; color: #333; margin-bottom: 20px;">日付・会場対応表</h3>
             <table class="schedule-table" style="margin: 0 auto; width: auto; min-width: 400px;">
@@ -1516,6 +1542,9 @@
             // 依存関係のある試合の表示を更新
             updateDependentMatches();
             
+            // 決勝の勝者をチェックして優勝者を表示
+            updateChampionDisplay();
+            
             console.log('Tournament winners updated:', tournamentWinners);
         }
 
@@ -1562,10 +1591,80 @@
             }
         }
 
+        // 優勝者表示の更新
+        function updateChampionDisplay() {
+            const finalResult = matchResults['tournament-final'];
+            const championDisplay = document.getElementById('champion-display');
+            const championText = document.getElementById('champion-text');
+            
+            if (finalResult) {
+                // 決勝の勝者を取得
+                let champion = null;
+                if (finalResult === 'win') {
+                    champion = getTournamentPlayer1('final');
+                } else if (finalResult === 'lose') {
+                    champion = getTournamentPlayer2('final');
+                }
+                
+                if (champion && champion !== '未定') {
+                    // 優勝者を表示
+                    championText.textContent = `${champion}優勝！`;
+                    championDisplay.style.display = 'block';
+                    
+                    // 勝利の効果音やアニメーションを追加（将来的な拡張用）
+                    triggerChampionCelebration();
+                } else {
+                    // 決勝は設定されているが勝者が未定
+                    championDisplay.style.display = 'none';
+                }
+            } else {
+                // 決勝の結果がまだ設定されていない
+                championDisplay.style.display = 'none';
+            }
+        }
+
+        // 優勝者決定時の演出
+        function triggerChampionCelebration() {
+            const championDisplay = document.getElementById('champion-display');
+            
+            // 一時的にさらに大きなアニメーションを追加
+            championDisplay.style.animation = 'championReveal 1s ease-out';
+            
+            // 数秒後に通常のアニメーションに戻す
+            setTimeout(() => {
+                championDisplay.style.animation = '';
+            }, 1000);
+        }
+
+        // 優勝者表示用の追加CSS（動的に追加）
+        function addChampionStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes championReveal {
+                    0% { 
+                        transform: scale(0.5) rotate(-10deg); 
+                        opacity: 0;
+                    }
+                    50% { 
+                        transform: scale(1.2) rotate(5deg); 
+                        opacity: 1;
+                    }
+                    100% { 
+                        transform: scale(1) rotate(0deg); 
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
 
         document.addEventListener('DOMContentLoaded', async function() {
             // 確定データを読み込み
             await loadConfirmedResults();
+            
+            // 優勝者表示用のCSSを追加
+            addChampionStyles();
             
             // トーナメントブラケットを初期化（jQueryが読み込まれた後）
             setTimeout(initializeTournamentBracket, 500);
@@ -1716,6 +1815,7 @@
                             const totalCount = Object.keys(mergedResults).length;
                             
                             refreshAllTables();
+                            updateChampionDisplay(); // 優勝者表示も更新
                             alert(`結果を正常に読み込みました。\n確定済み: ${confirmedCount}件\nアップロード: ${uploadedCount}件\n合計: ${totalCount}件`);
                             console.log('マージ完了 - 確定:', confirmedCount, 'アップロード:', uploadedCount, '合計:', totalCount);
                         } else {
@@ -1732,6 +1832,9 @@
             
             // 確定データ読み込み後にテーブルを更新
             refreshAllTables();
+            
+            // 初期状態で優勝者表示をチェック
+            updateChampionDisplay();
         });
     </script>
 </body>
