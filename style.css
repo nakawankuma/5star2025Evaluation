@@ -175,27 +175,49 @@
             cursor: pointer;
         }
         
-        .match-result {
+        .match-results {
             position: absolute;
             top: 50%;
-            left: 8px;
+            left: 0;
+            right: 0;
             transform: translateY(-50%);
-            font-size: 28px; /* 文字のサイズを大きく */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 6px;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .confirmed-result,
+        .predicted-result {
+            font-size: 28px;
             font-weight: bold;
             line-height: 1;
             width: 30px;
             text-align: center;
         }
         
-        .match-result.win {
+        .confirmed-result {
+            color: #666;
+        }
+        
+        .predicted-result {
+            /* 予想データのデフォルト色 */
+        }
+        
+        .confirmed-result.win,
+        .predicted-result.win {
             color: #28a745;
         }
         
-        .match-result.draw {
+        .confirmed-result.draw,
+        .predicted-result.draw {
             color: #ffc107;
         }
         
-        .match-result.lose {
+        .confirmed-result.lose,
+        .predicted-result.lose {
             color: #dc3545;
         }
         
@@ -260,6 +282,14 @@
         .point-column {
             background-color: #fff3cd;
             font-weight: bold;
+            color: #856404;
+        }
+        
+        .confirmed-points {
+            color: #666;
+        }
+        
+        .predicted-points {
             color: #856404;
         }
 

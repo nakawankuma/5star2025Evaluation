@@ -21,9 +21,8 @@
                 <button class="toggle-button" onclick="showTabView()">タブ表示</button>
             </div>
             <div class="io-controls">
-                <button id="download-btn" class="io-button">結果をダウンロード</button>
-                <button id="download-confirmed-btn" class="io-button">確定データをダウンロード</button>
-                <button id="upload-btn" class="io-button">結果をアップロード</button>
+                <button id="download-btn" class="io-button">予想結果をダウンロード</button>
+                <button id="upload-btn" class="io-button">予想結果をアップロード</button>
                 <input type="file" id="upload-input" accept=".json" style="display: none;">
             </div>
         </div>
@@ -51,22 +50,47 @@
                         <th class="red-header">稲葉あずさ</th>
                         <th class="red-header">ビープレストリー</th>
                         <th class="red-header rest-column">休み</th>
-                        <th class="red-header point-column">勝点</th>
+                        <th class="red-header point-column">勝ち点（予想）</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="player-name red-player">上谷沙弥</td>
                         <td class="diagonal"></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="羽南" data-block="red-a"><div class="date">8.6</div><div class="venue">後楽園</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="星来芽依" data-block="red-a"><div class="date">8.16</div><div class="venue">横浜</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="水森由菜" data-block="red-a"><div class="date">7.30</div><div class="venue">盛岡</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="レディ・C" data-block="red-a"><div class="date">7.27</div><div class="venue">開幕</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="月山和香" data-block="red-a"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="稲葉あずさ" data-block="red-a"><div class="date">8.2</div><div class="venue">仙台</div><div class="match-result"></div></td>
-                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="ビープレストリー" data-block="red-a"><div class="date">8.17</div><div class="venue">浜松</div><div class="match-result"></div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="羽南" data-block="red-a">
+                            <div class="date">8.6</div>
+                            <div class="venue">後楽園</div>
+                            <div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div>
+                        </td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="星来芽依" data-block="red-a"><div class="date">8.16</div><div class="venue">横浜</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="水森由菜" data-block="red-a"><div class="date">7.30</div><div class="venue">盛岡</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="レディ・C" data-block="red-a"><div class="date">7.27</div><div class="venue">開幕</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="月山和香" data-block="red-a"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="稲葉あずさ" data-block="red-a"><div class="date">8.2</div><div class="venue">仙台</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
+                        <td class="match-info clickable-cell" data-player1="上谷沙弥" data-player2="ビープレストリー" data-block="red-a"><div class="date">8.17</div><div class="venue">浜松</div><div class="match-results">
+                                <div class="confirmed-result"></div>
+                                <div class="predicted-result"></div>
+                            </div></td>
                         <td class="rest-column match-info"><div class="date">8.10</div><div class="venue">岡山</div></td>
-                        <td class="point-column" data-player="上谷沙弥">0</td>
+                        <td class="point-column" data-player="上谷沙弥"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">羽南</td>
@@ -79,7 +103,7 @@
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">星来芽依</td>
@@ -92,7 +116,7 @@
                         <td class="match-info"><div class="date">8.10</div><div class="venue">岡山</div></td>
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">水森由菜</td>
@@ -105,7 +129,7 @@
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">レディ・C</td>
@@ -118,7 +142,7 @@
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div></td>
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">月山和香</td>
@@ -131,7 +155,7 @@
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="match-info"><div class="date">8.2</div><div class="venue">仙台</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">稲葉あずさ</td>
@@ -144,7 +168,7 @@
                         <td class="diagonal"></td>
                         <td class="match-info"><div class="date">7.30</div><div class="venue">盛岡</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">ビープレストリー</td>
@@ -157,7 +181,7 @@
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
                         <td class="rest-column match-info"><div class="date">8.10</div><div class="venue">岡山</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                 </tbody>
             </table>
@@ -179,7 +203,7 @@
                         <th class="red-header">刀羅ナツコ</th>
                         <th class="red-header">吏南</th>
                         <th class="red-header rest-column">休み</th>
-                        <th class="red-header point-column">勝点</th>
+                        <th class="red-header point-column">勝ち点（予想）</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,7 +218,7 @@
                         <td class="match-info"><div class="date">8.10</div><div class="venue">岡山</div></td>
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">AZM</td>
@@ -207,7 +231,7 @@
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">なつぽい</td>
@@ -220,7 +244,7 @@
                         <td class="match-info"><div class="date">7.30</div><div class="venue">盛岡</div></td>
                         <td class="match-info"><div class="date">8.10</div><div class="venue">岡山</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">玖麗さやか</td>
@@ -233,7 +257,7 @@
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="match-info"><div class="date">7.30</div><div class="venue">盛岡</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">稲葉ともか</td>
@@ -246,7 +270,7 @@
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">梨杏</td>
@@ -259,7 +283,7 @@
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(夜)</div></td>
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">刀羅ナツコ</td>
@@ -272,7 +296,7 @@
                         <td class="diagonal"></td>
                         <td class="match-info"><div class="date">8.2</div><div class="venue">仙台</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name red-player">吏南</td>
@@ -285,7 +309,7 @@
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                 </tbody>
             </table>
@@ -307,7 +331,7 @@
                         <th class="blue-header">琉悪夏</th>
                         <th class="blue-header">姫ゆりあ</th>
                         <th class="blue-header rest-column">休み</th>
-                        <th class="blue-header point-column">勝点</th>
+                        <th class="blue-header point-column">勝ち点（予想）</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -322,7 +346,7 @@
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(昼)</div></td>
                         <td class="match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">天咲光由</td>
@@ -335,7 +359,7 @@
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">安納サオリ</td>
@@ -348,7 +372,7 @@
                         <td class="match-info"><div class="date">8.9</div><div class="venue">京都</div></td>
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">さくらあや</td>
@@ -361,7 +385,7 @@
                         <td class="match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(昼)</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">壮麗亜美</td>
@@ -374,7 +398,7 @@
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="match-info"><div class="date">8.9</div><div class="venue">京都</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">ボジラ</td>
@@ -387,7 +411,7 @@
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">琉悪夏</td>
@@ -400,7 +424,7 @@
                         <td class="diagonal"></td>
                         <td class="match-info"><div class="date">8.11</div><div class="venue">神戸</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">姫ゆりあ</td>
@@ -413,7 +437,7 @@
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                 </tbody>
             </table>
@@ -435,7 +459,7 @@
                         <th class="blue-header">小波</th>
                         <th class="blue-header">Sareee</th>
                         <th class="blue-header rest-column">休み</th>
-                        <th class="blue-header point-column">勝点</th>
+                        <th class="blue-header point-column">勝ち点（予想）</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -450,7 +474,7 @@
                         <td class="match-info"><div class="date">8.9</div><div class="venue">京都</div></td>
                         <td class="match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">妃南</td>
@@ -463,7 +487,7 @@
                         <td class="match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(昼)</div></td>
                         <td class="rest-column match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">八神蘭奈</td>
@@ -476,7 +500,7 @@
                         <td class="match-info"><div class="date">8.3</div><div class="venue">宇都宮(昼)</div></td>
                         <td class="match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">HANAKO</td>
@@ -489,7 +513,7 @@
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="match-info"><div class="date">8.11</div><div class="venue">神戸</div></td>
                         <td class="rest-column match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">鈴季すず</td>
@@ -502,7 +526,7 @@
                         <td class="match-info"><div class="date">8.11</div><div class="venue">神戸</div></td>
                         <td class="match-info"><div class="date">8.9</div><div class="venue">京都</div></td>
                         <td class="rest-column match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">渡辺桃</td>
@@ -515,7 +539,7 @@
                         <td class="match-info"><div class="date">8.1</div><div class="venue">郡山</div></td>
                         <td class="match-info"><div class="date">8.16</div><div class="venue">横浜</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">小波</td>
@@ -528,7 +552,7 @@
                         <td class="diagonal"></td>
                         <td class="match-info"><div class="date">7.27</div><div class="venue">開幕</div></td>
                         <td class="rest-column match-info"><div class="date">8.17</div><div class="venue">浜松</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                     <tr>
                         <td class="player-name blue-player">Sareee</td>
@@ -541,7 +565,7 @@
                         <td class="diagonal"></td>
                         <td class="diagonal"></td>
                         <td class="rest-column match-info"><div class="date">8.6</div><div class="venue">後楽園</div></td>
-                        <td class="point-column"></td>
+                        <td class="point-column"><span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)</td>
                     </tr>
                 </tbody>
             </table>
@@ -861,6 +885,11 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- 確定データダウンロードボタン -->
+        <div style="text-align: center; margin-top: 30px; padding: 20px;">
+            <button id="download-confirmed-btn" class="io-button" style="background: #4CAF50; border-color: #45a049; font-size: 1.1em; padding: 12px 24px;">確定データをダウンロード</button>
+        </div>
     </div>
 
     
@@ -901,8 +930,8 @@
 
                 <h4><i class="fa-solid fa-download"></i> データの保存・読み込み</h4>
                 <ul>
-                    <li><strong>結果をダウンロード：</strong>現在の予想結果をファイルとして保存できます</li>
-                    <li><strong>結果をアップロード：</strong>保存した予想結果を読み込んで予想を再開できます</li>
+                    <li><strong>予想結果をダウンロード：</strong>現在の予想結果をファイルとして保存できます</li>
+                    <li><strong>予想結果をアップロード：</strong>保存した予想結果を読み込んで予想を再開できます</li>
                     <li><strong>確定データをダウンロード：</strong>確定した結果として保存します（公式結果用）</li>
                 </ul>
 

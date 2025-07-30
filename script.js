@@ -1,6 +1,7 @@
 // グローバルなmatchResultsオブジェクト
 let matchResults = {};
 let confirmedResults = {}; // 確定済み結果
+let predictedResults = {}; // 予想結果（確定データとは別管理）
 const blocks = ['red-a', 'red-b', 'blue-a', 'blue-b'];
 
 // 選手名の正規化（吏南と更南を同じとして扱う）
@@ -44,8 +45,8 @@ async function loadConfirmedResults() {
             console.log('正規化後データ件数:', Object.keys(confirmedResults).length + '件');
             console.log('データ削減率:', ((Object.keys(rawConfirmedResults).length - Object.keys(confirmedResults).length) / Object.keys(rawConfirmedResults).length * 100).toFixed(1) + '%');
             console.log('確定データを読み込みました:', Object.keys(confirmedResults).length + '件');
-            // 確定データをmatchResultsにマージ
-            Object.assign(matchResults, confirmedResults);
+            // matchResultsは確定データと予想データをマージ（確定データ優先）
+            matchResults = { ...predictedResults, ...confirmedResults };
         } else {
             console.log('result.jsonが見つかりません。確定データなしで開始します。');
         }
@@ -116,7 +117,8 @@ function showContent(contentId) {
 }
 
 function toggleMatchResult(cell) {
-    const resultDiv = cell.querySelector('.match-result');
+    const predictedResultDiv = cell.querySelector('.predicted-result');
+    const confirmedResultDiv = cell.querySelector('.confirmed-result');
     const player1 = normalizePlayerName(cell.dataset.player1);
     const player2 = normalizePlayerName(cell.dataset.player2);
     const block = cell.dataset.block;
@@ -135,43 +137,71 @@ function toggleMatchResult(cell) {
         statusEl.textContent = '';
     }
     
-    let currentResult = matchResults[matchKey] || 'none';
+    let currentResult = predictedResults[matchKey] || 'none';
     
     switch (currentResult) {
-        case 'none': matchResults[matchKey] = 'win'; matchResults[reverseKey] = 'lose'; break;
-        case 'win': matchResults[matchKey] = 'draw'; matchResults[reverseKey] = 'draw'; break;
-        case 'draw': matchResults[matchKey] = 'lose'; matchResults[reverseKey] = 'win'; break;
-        default: delete matchResults[matchKey]; delete matchResults[reverseKey]; break;
+        case 'none': predictedResults[matchKey] = 'win'; predictedResults[reverseKey] = 'lose'; break;
+        case 'win': predictedResults[matchKey] = 'draw'; predictedResults[reverseKey] = 'draw'; break;
+        case 'draw': predictedResults[matchKey] = 'lose'; predictedResults[reverseKey] = 'win'; break;
+        default: delete predictedResults[matchKey]; delete predictedResults[reverseKey]; break;
     }
     
-    updateCellDisplay(cell, matchResults[matchKey]);
+    // matchResultsも更新（互換性のため）
+    matchResults[matchKey] = predictedResults[matchKey];
+    matchResults[reverseKey] = predictedResults[reverseKey];
+    if (!predictedResults[matchKey]) {
+        delete matchResults[matchKey];
+        delete matchResults[reverseKey];
+    }
+    
+    updateCellDisplay(cell, matchResults[matchKey], 'predicted');
     const opponentCell = document.querySelector(`[data-player1="${player2}"][data-player2="${player1}"][data-block="${block}"]`);
     if (opponentCell) {
-        updateCellDisplay(opponentCell, matchResults[reverseKey]);
+        updateCellDisplay(opponentCell, matchResults[reverseKey], 'predicted');
     }
     updatePoints(block);
 }
 
-function updateCellDisplay(cell, result) {
-    const resultDiv = cell.querySelector('.match-result');
-    resultDiv.innerHTML = getResultIcon(result);
-    resultDiv.className = 'match-result ';
-    if(result) resultDiv.classList.add(result);
-    
-    // 確定済み結果の場合はセルのスタイルを変更
+function updateCellDisplay(cell, result, type = 'predicted') {
     const player1 = normalizePlayerName(cell.dataset.player1);
     const player2 = normalizePlayerName(cell.dataset.player2);
     const block = cell.dataset.block;
     const matchKey = `${block}-${player1}-${player2}`;
     
+    const confirmedResultDiv = cell.querySelector('.confirmed-result');
+    const predictedResultDiv = cell.querySelector('.predicted-result');
+    
+    // 確定データの表示
     if (confirmedResults[matchKey]) {
+        const confirmedResult = confirmedResults[matchKey];
+        confirmedResultDiv.innerHTML = getResultIcon(confirmedResult);
+        confirmedResultDiv.className = 'confirmed-result';
+        if(confirmedResult) confirmedResultDiv.classList.add(confirmedResult);
+        
+        // セルを確定済みにする（クリック不可）
         cell.classList.add('confirmed-cell');
         cell.classList.remove('clickable-cell');
     } else {
+        confirmedResultDiv.innerHTML = '';
+        confirmedResultDiv.className = 'confirmed-result';
+        
+        // セルをクリック可能にする
         cell.classList.remove('confirmed-cell');
         if (!cell.classList.contains('clickable-cell')) {
             cell.classList.add('clickable-cell');
         }
+    }
+    
+    // 予想データの表示（predictedResultsから取得）
+    const predictedResult = predictedResults[matchKey];
+    
+    if (predictedResult) {
+        predictedResultDiv.innerHTML = getResultIcon(predictedResult);
+        predictedResultDiv.className = 'predicted-result';
+        predictedResultDiv.classList.add(predictedResult);
+    } else {
+        predictedResultDiv.innerHTML = '';
+        predictedResultDiv.className = 'predicted-result';
     }
 }
 
@@ -185,18 +215,38 @@ function getResultIcon(result) {
 }
 
 function updatePoints(block) {
-    const pointCells = document.querySelectorAll(`#${block} .point-column[data-player]`);
+    const pointCells = document.querySelectorAll(`#${block} .point-column`);
     pointCells.forEach(pointCell => {
-        const player = normalizePlayerName(pointCell.dataset.player);
-        let points = 0;
-        Object.keys(matchResults).forEach(key => {
+        const player = pointCell.dataset.player ? normalizePlayerName(pointCell.dataset.player) : null;
+        
+        if (!player) return; // data-playerがない場合はスキップ
+        
+        // 確定ポイントの計算
+        let confirmedPoints = 0;
+        Object.keys(confirmedResults).forEach(key => {
             if (key.startsWith(`${block}-${player}-`)) {
-                const result = matchResults[key];
-                if (result === 'win') points += 2;
-                if (result === 'draw') points += 1;
+                const result = confirmedResults[key];
+                if (result === 'win') confirmedPoints += 2;
+                if (result === 'draw') confirmedPoints += 1;
             }
         });
-        pointCell.textContent = points;
+        
+        // 予想ポイントの計算（確定ポイント + 予想データのポイント）
+        let predictedPoints = confirmedPoints;
+        Object.keys(predictedResults).forEach(key => {
+            if (key.startsWith(`${block}-${player}-`) && !confirmedResults[key]) {
+                const result = predictedResults[key];
+                if (result === 'win') predictedPoints += 2;
+                if (result === 'draw') predictedPoints += 1;
+            }
+        });
+        
+        // 点数表示を更新
+        const confirmedPointsSpan = pointCell.querySelector('.confirmed-points');
+        const predictedPointsSpan = pointCell.querySelector('.predicted-points');
+        
+        if (confirmedPointsSpan) confirmedPointsSpan.textContent = confirmedPoints;
+        if (predictedPointsSpan) predictedPointsSpan.textContent = predictedPoints;
     });
     checkCompletionAndRank(block);
 }
@@ -570,13 +620,13 @@ function refreshAllTables() {
         const table = document.querySelector(`#${blockId} .schedule-table`);
         if (!table) return;
 
-        table.querySelectorAll('.clickable-cell').forEach(cell => {
+        table.querySelectorAll('.clickable-cell, .confirmed-cell').forEach(cell => {
             const player1 = normalizePlayerName(cell.dataset.player1);
             const player2 = normalizePlayerName(cell.dataset.player2);
             const block = cell.dataset.block;
             const matchKey = `${block}-${player1}-${player2}`;
-            const result = matchResults[matchKey];
-            updateCellDisplay(cell, result);
+            const result = predictedResults[matchKey];
+            updateCellDisplay(cell, result, 'predicted');
         });
 
         updatePoints(blockId);
@@ -964,7 +1014,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             const pointCell = cells[cells.length - 1];
             if (pointCell.classList.contains('point-column')) {
                 pointCell.dataset.player = rowPlayerName;
-                if (pointCell.textContent.trim() === '') pointCell.textContent = '0';
+                // 新しい形式に変更済みの場合はスキップ
+                if (!pointCell.querySelector('.confirmed-points')) {
+                    pointCell.innerHTML = '<span class="confirmed-points">0</span>(<span class="predicted-points">0</span>)';
+                }
             }
 
             cells.forEach((cell, cellIndex) => {
@@ -987,8 +1040,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                         if (dateDiv) cell.appendChild(dateDiv.cloneNode(true));
                         if (venueDiv) cell.appendChild(venueDiv.cloneNode(true));
                     }
-                    if (!cell.querySelector('.match-result')) {
-                        cell.insertAdjacentHTML('beforeend', '<div class="match-result"></div>');
+                    if (!cell.querySelector('.match-results')) {
+                        cell.insertAdjacentHTML('beforeend', '<div class="match-results"><div class="confirmed-result"></div><div class="predicted-result"></div></div>');
                     }
                 }
             });
@@ -1036,12 +1089,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     const uploadInput = document.getElementById('upload-input');
 
     downloadBtn.addEventListener('click', () => {
-        const dataStr = JSON.stringify(matchResults, null, 2);
+        const dataStr = JSON.stringify(predictedResults, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(dataBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'match-results.json';
+        a.download = 'predicted-results.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1105,13 +1158,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                     console.log('正規化後データ件数:', Object.keys(loadedResults).length + '件');
                     console.log('データ削減率:', ((Object.keys(rawLoadedResults).length - Object.keys(loadedResults).length) / Object.keys(rawLoadedResults).length * 100).toFixed(1) + '%');
                     
-                    // 確定データと予想データをマージ（確定データ優先）
-                    const mergedResults = { ...loadedResults, ...confirmedResults };
-                    matchResults = mergedResults;
+                    // アップロードされたデータを予想データとして保存
+                    predictedResults = { ...loadedResults };
+                    // matchResultsは確定データと予想データをマージ（確定データ優先）
+                    matchResults = { ...predictedResults, ...confirmedResults };
                     
                     const confirmedCount = Object.keys(confirmedResults).length;
                     const uploadedCount = Object.keys(loadedResults).length;
-                    const totalCount = Object.keys(mergedResults).length;
+                    const totalCount = Object.keys(matchResults).length;
                     
                     refreshAllTables();
                     updateChampionDisplay(); // 優勝者表示も更新
