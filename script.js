@@ -386,7 +386,8 @@ function showPlayerSchedule(playerName) {
                 dateText: dateText,
                 opponent: opponent,
                 venue: venueEl.textContent,
-                result: result
+                result: result,
+                block: block  // ブロック情報を追加
             });
         }
     });
@@ -394,14 +395,26 @@ function showPlayerSchedule(playerName) {
     matches.sort((a, b) => a.date - b.date);
 
     modalPlayerName.textContent = `${playerName} - 対戦スケジュール`;
-    let scheduleHtml = '<table><thead><tr><th>日付</th><th>対戦相手</th><th>会場</th><th>勝敗</th></tr></thead><tbody>';
+    let scheduleHtml = '<table><thead><tr><th>日付</th><th>対戦相手</th><th>会場</th><th>確定勝敗</th><th>予想勝敗</th></tr></thead><tbody>';
     if (matches.length > 0) {
         matches.forEach(match => {
-            const resultIcon = getResultIcon(match.result);
-            scheduleHtml += `<tr><td>${match.dateText}</td><td>${match.opponent}</td><td>${match.venue}</td><td class="result-cell ${match.result || ''}">${resultIcon}</td></tr>`;
+            const matchKey = `${match.block}-${normalizedPlayerName}-${match.opponent}`;
+            const confirmedResult = confirmedResults[matchKey];
+            const predictedResult = predictedResults[matchKey];
+            
+            const confirmedIcon = getResultIcon(confirmedResult);
+            const predictedIcon = getResultIcon(predictedResult);
+            
+            scheduleHtml += `<tr>
+                <td>${match.dateText}</td>
+                <td>${match.opponent}</td>
+                <td>${match.venue}</td>
+                <td class="result-cell ${confirmedResult || ''}">${confirmedIcon}</td>
+                <td class="result-cell ${predictedResult || ''}">${predictedIcon}</td>
+            </tr>`;
         });
     } else {
-        scheduleHtml += '<tr><td colspan="4">対戦予定はありません。</td></tr>';
+        scheduleHtml += '<tr><td colspan="5">対戦予定はありません。</td></tr>';
     }
     scheduleHtml += '</tbody></table>';
     modalScheduleBody.innerHTML = scheduleHtml;
@@ -434,14 +447,14 @@ function showVenueSchedule(venueName, date) {
     const matches = [];
 
     // リーグ戦の試合を収集
-    document.querySelectorAll('.clickable-cell').forEach(cell => {
+    document.querySelectorAll('.clickable-cell, .confirmed-cell').forEach(cell => {
         const venueEl = cell.querySelector('.venue');
         const dateEl = cell.querySelector('.date');
         if (venueEl && venueEl.textContent === venueName && dateEl && dateEl.textContent === date) {
             const player1 = cell.dataset.player1;
             const player2 = cell.dataset.player2;
             const block = cell.dataset.block;
-            const matchKey = `${block}-${player1}-${player2}`;
+            const matchKey = `${block}-${normalizePlayerName(player1)}-${normalizePlayerName(player2)}`;
             const result = matchResults[matchKey];
 
             matches.push({
@@ -581,13 +594,13 @@ function showVenueSchedule(venueName, date) {
                 const matchKey = `tournament-${slot.match_id}`;
                 const result = matchResults[matchKey];
 
-                matches.push({ player1: p1_display, player2: p2_display, result: result, date: date, block: 'トーナメント', type: slot.type });
+                matches.push({ player1: p1_display, player2: p2_display, result: result, date: date, block: 'トーナメント', type: slot.type, match_id: slot.match_id });
             }
         });
     }
 
     modalVenueName.textContent = `${venueName} (${date}) - 試合一覧`;
-    let scheduleHtml = '<table><thead><tr><th>試合形式</th><th>ブロック</th><th>選手1</th><th>vs</th><th>選手2</th><th>勝敗</th></tr></thead><tbody>';
+    let scheduleHtml = '<table><thead><tr><th>試合形式</th><th>ブロック</th><th>選手1</th><th>vs</th><th>選手2</th><th>確定勝敗</th><th>予想勝敗</th></tr></thead><tbody>';
     if (matches.length > 0) {
         const uniqueMatches = [];
         const seenMatchKeys = new Set();
@@ -604,11 +617,36 @@ function showVenueSchedule(venueName, date) {
         });
 
         uniqueMatches.forEach(match => {
-            const resultIcon = getResultIcon(match.result);
-            scheduleHtml += `<tr><td>${match.type}</td><td>${match.block}</td><td>${match.player1}</td><td>vs</td><td>${match.player2}</td><td class="result-cell ${match.result || ''}">${resultIcon}</td></tr>`;
+            let confirmedResult = null;
+            let predictedResult = null;
+            
+            if (match.type === 'リーグ戦') {
+                // リーグ戦の場合、matchKeyを使って確定・予想結果を取得
+                const matchKey = `${match.block}-${normalizePlayerName(match.player1)}-${normalizePlayerName(match.player2)}`;
+                confirmedResult = confirmedResults[matchKey];
+                predictedResult = predictedResults[matchKey];
+            } else {
+                // トーナメントの場合
+                const tournamentKey = `tournament-${match.match_id || ''}`;
+                confirmedResult = confirmedResults[tournamentKey];
+                predictedResult = predictedResults[tournamentKey];
+            }
+            
+            const confirmedIcon = getResultIcon(confirmedResult);
+            const predictedIcon = getResultIcon(predictedResult);
+            
+            scheduleHtml += `<tr>
+                <td>${match.type}</td>
+                <td>${match.block}</td>
+                <td>${match.player1}</td>
+                <td>vs</td>
+                <td>${match.player2}</td>
+                <td class="result-cell ${confirmedResult || ''}">${confirmedIcon}</td>
+                <td class="result-cell ${predictedResult || ''}">${predictedIcon}</td>
+            </tr>`;
         });
     } else {
-        scheduleHtml += '<tr><td colspan="6">この日の試合予定はありません。</td></tr>';
+        scheduleHtml += '<tr><td colspan="7">この日の試合予定はありません。</td></tr>';
     }
     scheduleHtml += '</tbody></table>';
     modalVenueBody.innerHTML = scheduleHtml;
