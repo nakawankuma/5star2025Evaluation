@@ -48,10 +48,20 @@
     "red-b-稲葉ともか-AZM": "lose",
     "red-a-羽南-月山和香": "win",
     "red-a-月山和香-羽南": "lose",
-    "blue-a-琉悪夏-さくらあや": "lose",
-    "blue-a-さくらあや-琉悪夏": "win"
+    "blue-a-ボジラ-姫ゆりあ": "win",
+    "blue-a-姫ゆりあ-ボジラ": "lose",
+    "blue-b-向後桃-鈴季すず": "lose",
+    "blue-b-鈴季すず-向後桃": "win",
+    "blue-b-Sareee-八神蘭奈": "win",
+    "blue-b-八神蘭奈-Sareee": "lose",
+    "blue-a-安納サオリ-天咲光由": "win",
+    "blue-a-天咲光由-安納サオリ": "lose",
+    "blue-b-渡辺桃-小波": "win",
+    "blue-b-小波-渡辺桃": "lose",
+    "blue-a-壮麗亜美-飯田沙耶": "win",
+    "blue-a-飯田沙耶-壮麗亜美": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-01T07:34:47.745Z",
-  "totalMatches": 50
+  "lastUpdate": "2025-08-01T11:28:40.427Z",
+  "totalMatches": 62
 }
