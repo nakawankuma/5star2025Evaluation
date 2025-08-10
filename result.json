@@ -127,9 +127,25 @@
     "blue-a-ボジラ-安納サオリ": "draw",
     "blue-a-安納サオリ-ボジラ": "draw",
     "red-b-AZM-吏南": "win",
-    "red-b-吏南-AZM": "lose"
+    "red-b-吏南-AZM": "lose",
+    "blue-a-壮麗亜美-姫ゆりあ": "win",
+    "blue-a-姫ゆりあ-壮麗亜美": "lose",
+    "blue-b-小波-向後桃": "win",
+    "blue-b-向後桃-小波": "lose",
+    "blue-a-ボジラ-さくらあや": "win",
+    "blue-a-さくらあや-ボジラ": "lose",
+    "blue-a-安納サオリ-琉悪夏": "win",
+    "blue-a-琉悪夏-安納サオリ": "lose",
+    "blue-b-八神蘭奈-妃南": "win",
+    "blue-b-妃南-八神蘭奈": "lose",
+    "blue-b-鈴季すず-Sareee": "draw",
+    "blue-b-Sareee-鈴季すず": "draw",
+    "blue-a-飯田沙耶-天咲光由": "win",
+    "blue-a-天咲光由-飯田沙耶": "lose",
+    "blue-b-HANAKO-渡辺桃": "win",
+    "blue-b-渡辺桃-HANAKO": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-06T13:54:51.015Z",
-  "totalMatches": 128
+  "lastUpdate": "2025-08-10T12:12:05.285Z",
+  "totalMatches": 144
 }
