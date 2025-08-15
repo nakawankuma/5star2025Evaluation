@@ -159,9 +159,25 @@
     "red-b-なつぽい-吏南": "win",
     "red-b-吏南-なつぽい": "lose",
     "red-b-スターライト・キッド-刀羅ナツコ": "win",
-    "red-b-刀羅ナツコ-スターライト・キッド": "lose"
+    "red-b-刀羅ナツコ-スターライト・キッド": "lose",
+    "blue-a-琉悪夏-姫ゆりあ": "win",
+    "blue-a-姫ゆりあ-琉悪夏": "lose",
+    "blue-b-八神蘭奈-向後桃": "win",
+    "blue-b-向後桃-八神蘭奈": "lose",
+    "blue-a-天咲光由-壮麗亜美": "win",
+    "blue-a-壮麗亜美-天咲光由": "lose",
+    "blue-b-妃南-渡辺桃": "win",
+    "blue-b-渡辺桃-妃南": "lose",
+    "blue-a-ボジラ-飯田沙耶": "win",
+    "blue-a-飯田沙耶-ボジラ": "lose",
+    "blue-b-Sareee-HANAKO": "win",
+    "blue-b-HANAKO-Sareee": "lose",
+    "blue-b-鈴季すず-小波": "win",
+    "blue-b-小波-鈴季すず": "lose",
+    "blue-a-安納サオリ-さくらあや": "win",
+    "blue-a-さくらあや-安納サオリ": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-14T17:01:19.893Z",
-  "totalMatches": 160
+  "lastUpdate": "2025-08-15T12:58:00.632Z",
+  "totalMatches": 176
 }
