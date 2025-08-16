@@ -195,9 +195,11 @@
     "red-a-月山和香-稲葉あずさ": "win",
     "red-a-稲葉あずさ-月山和香": "lose",
     "red-a-ビープレストリー-レディ・C": "win",
-    "red-a-レディ・C-ビープレストリー": "lose"
+    "red-a-レディ・C-ビープレストリー": "lose",
+    "red-a-上谷沙弥-星来芽依": "win",
+    "red-a-星来芽依-上谷沙弥": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-16T08:59:01.816Z",
-  "totalMatches": 196
+  "lastUpdate": "2025-08-16T09:15:06.209Z",
+  "totalMatches": 198
 }
