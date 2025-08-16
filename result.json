@@ -175,9 +175,29 @@
     "blue-b-鈴季すず-小波": "win",
     "blue-b-小波-鈴季すず": "lose",
     "blue-a-安納サオリ-さくらあや": "win",
-    "blue-a-さくらあや-安納サオリ": "lose"
+    "blue-a-さくらあや-安納サオリ": "lose",
+    "blue-b-小波-HANAKO": "win",
+    "blue-b-HANAKO-小波": "lose",
+    "red-b-稲葉ともか-刀羅ナツコ": "win",
+    "red-b-刀羅ナツコ-稲葉ともか": "lose",
+    "red-b-吏南-スターライト・キッド": "draw",
+    "red-b-スターライト・キッド-吏南": "draw",
+    "red-b-なつぽい-梨杏": "win",
+    "red-b-梨杏-なつぽい": "lose",
+    "blue-b-向後桃-妃南": "win",
+    "blue-b-妃南-向後桃": "lose",
+    "blue-a-安納サオリ-姫ゆりあ": "win",
+    "blue-a-姫ゆりあ-安納サオリ": "lose",
+    "blue-a-天咲光由-琉悪夏": "win",
+    "blue-a-琉悪夏-天咲光由": "lose",
+    "blue-a-飯田沙耶-さくらあや": "win",
+    "blue-a-さくらあや-飯田沙耶": "lose",
+    "red-a-月山和香-稲葉あずさ": "win",
+    "red-a-稲葉あずさ-月山和香": "lose",
+    "red-a-ビープレストリー-レディ・C": "win",
+    "red-a-レディ・C-ビープレストリー": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-15T12:58:00.632Z",
-  "totalMatches": 176
+  "lastUpdate": "2025-08-16T08:59:01.816Z",
+  "totalMatches": 196
 }
