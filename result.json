@@ -197,9 +197,11 @@
     "red-a-ビープレストリー-レディ・C": "win",
     "red-a-レディ・C-ビープレストリー": "lose",
     "red-a-上谷沙弥-星来芽依": "win",
-    "red-a-星来芽依-上谷沙弥": "lose"
+    "red-a-星来芽依-上谷沙弥": "lose",
+    "blue-b-Sareee-渡辺桃": "win",
+    "blue-b-渡辺桃-Sareee": "lose"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-16T09:15:06.209Z",
-  "totalMatches": 198
+  "lastUpdate": "2025-08-16T09:30:59.866Z",
+  "totalMatches": 200
 }
