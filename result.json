@@ -223,9 +223,20 @@
     "blue-b-鈴季すず-八神蘭奈": "win",
     "blue-b-八神蘭奈-鈴季すず": "lose",
     "red-a-ビープレストリー-上谷沙弥": "win",
-    "red-a-上谷沙弥-ビープレストリー": "lose"
+    "red-a-上谷沙弥-ビープレストリー": "lose",
+    "tournament-blue-prelim1": "lose",
+    "tournament-blue-qf1": "win",
+    "tournament-blue-prelim2": "lose",
+    "tournament-blue-qf2": "lose",
+    "tournament-blue-sf": "lose",
+    "tournament-red-prelim1": "lose",
+    "tournament-red-qf1": "lose",
+    "tournament-red-prelim2": "lose",
+    "tournament-red-qf2": "lose",
+    "tournament-red-sf": "win",
+    "tournament-final": "win"
   },
   "version": "1.0",
-  "lastUpdate": "2025-08-17T08:05:46.378Z",
-  "totalMatches": 224
+  "lastUpdate": "2025-08-29T01:32:01.011Z",
+  "totalMatches": 235
 }
